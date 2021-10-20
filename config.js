@@ -5,6 +5,7 @@ module.exports = {
     dbHost: process.env.DATABASE_HOST,
     dbUser: process.env.DATABASE_USER,
     dbPort: process.env.DATABASE_PORT,
+    mongoDBURL: process.env.MONGODB_URL,
     dialect: 'mysql',
     logging: true,
     dialectOptions: {

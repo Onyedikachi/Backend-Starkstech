@@ -6,7 +6,7 @@ const {dbName,
     dbPort,
     dialect,
     logging,
-   } = require("./config.js");
+   } = require("../config");
 
 const sequelize = new Sequelize(dbName, dbUser, dbPass, {
   host: dbHost,
