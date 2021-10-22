@@ -3,11 +3,16 @@ const router = express.Router();
 
 
 const {
-    index
+    index,
+    create
 } = require('../controllers/EventController');
 
 router
   .route('/list')
   .get(index)
+
+router
+    .route('/')
+    .post(create)
 
 module.exports = router;

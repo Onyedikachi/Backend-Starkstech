@@ -31,8 +31,8 @@ const create = (req, res) => {
 
     fs.readFile(appDir + '/client_secret.json', (err, content) => {
         if (err) {
-            console.log('Get error when loading client secret file: ' + err);
-            return;
+            logger.error('Get error when loading client secret file: ' + err);
+            return res.status(StatusCodes.BAD_REQUEST).json(err);
         }
         authorize(JSON.parse(content), addEvent, res, options);
     });
