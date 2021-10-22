@@ -41,8 +41,8 @@ const create = (req, res) => {
 const show = (req, res) => {
     fs.readFile(appDir + '/client_secret.json', (err, content) => {
         if (err) {
-            console.log('Get error when loading client secret file: ' + err);
-            return;
+            logger.error('Get error when loading client secret file: ' + err);
+            return res.status(StatusCodes.BAD_REQUEST).json(err);
         }
         authorize(JSON.parse(content), getEvent, res, { eventId: req.params.eventId});
     });
@@ -54,8 +54,8 @@ const update = (req, res) => {
 const destroy = (req, res) => {
     fs.readFile(appDir + '/client_secret.json', (err, content) => {
         if (err) {
-            console.log('Get error when loading client secret file: ' + err);
-            return;
+            logger.error('Get error when loading client secret file: ' + err);
+            return res.status(StatusCodes.BAD_REQUEST).json(err);;
         }
         authorize(JSON.parse(content), removeEvent, res, { eventId: req.params.eventId});
     });

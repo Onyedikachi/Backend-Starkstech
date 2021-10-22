@@ -4,7 +4,9 @@ const router = express.Router();
 
 const {
     index,
-    create
+    create,
+    show,
+    destroy
 } = require('../controllers/EventController');
 
 router
@@ -14,5 +16,10 @@ router
 router
     .route('/')
     .post(create)
+
+router
+    .route('/:eventId')
+    .get(show)
+    .delete(destroy)
 
 module.exports = router;
