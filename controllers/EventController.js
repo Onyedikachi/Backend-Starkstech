@@ -1,23 +1,24 @@
 const { StatusCodes } = require('http-status-codes');
-const CustomError = require('../errors');
 
 const fs = require('fs');
 const path = require('path');
-const appDir = path.dirname(require.main.filename)
+const {promisify} = require('util');
 
-const logger = require('../utils/logger')
+const appDir = path.dirname(require.main.filename);
+
+const logger = require('../utils/logger');
+const read = promisify(fs.readFile);
+
 
 const {listEvents, addEvent, removeEvent, updateEvent, authorize} = require('../utils/calender');
 
-const index = (req, res) => {
-    fs.readFile(appDir + '/utils/client_secret.json', (err, content) => {
-        if (err) {
-            logger.error('Get error when loading client secret file: ' + err);
-            return res.status(StatusCodes.BAD_REQUEST).json(err);
-        }
+const index = async (req, res) => {
+    
+    let content = await read(appDir + '/utils/client_secret.json');
 
-        authorize(JSON.parse(content), listEvents, res);
-    });
+    let result = await authorize(JSON.parse(content), listEvents);
+
+    res.status(StatusCodes.OK).json(result);
 };
 
 const create = (req, res) => {

@@ -3,7 +3,7 @@ const CustomError = require('../errors');
 const ToDos = require('../models/ToDoItem');
 
 const createItem = async (req, res) => {
-    const { attachments, name, description, accomplished } = req.body;
+    const { attachments, name, description, accomplished, startTime, endTime } = req.body;
 
   let taskAttachments = [];
 
