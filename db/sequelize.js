@@ -26,6 +26,6 @@ db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
 //  Models/tables
-//db.Appointments =require("./models/Appointments")(sequelize, Sequelize);
+db.Events  =  require("../models/Event")(sequelize, Sequelize);
 
 module.exports = db;

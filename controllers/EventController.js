@@ -22,8 +22,6 @@ const index = async (req, res) => {
 };
 
 const create = (req, res) => {
-
-
     const startTime = parseInt(req.params.startTime);
     const endTime = startTime + 1000 * 60 * 30;
     const options = {
@@ -53,7 +51,7 @@ const update = (req, res) => {
 const destroy = (req, res) => {
     const content = await read(appDir + '/utils/client_secret.json');
 
-    const result = await authorize(JSON.parse(content), removeEvent, res, { eventId: req.params.eventId});
+    const result = await authorize(JSON.parse(content), removeEvent, { eventId: req.params.eventId});
 
     res.status(StatusCodes.OK).json(result);
 };
