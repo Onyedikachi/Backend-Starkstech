@@ -14,14 +14,16 @@ const {listEvents, addEvent, removeEvent, updateEvent, authorize} = require('../
 
 const index = async (req, res) => {
     
-    let content = await read(appDir + '/utils/client_secret.json');
+    const content = await read(appDir + '/utils/client_secret.json');
 
-    let result = await authorize(JSON.parse(content), listEvents);
+    const result = await authorize(JSON.parse(content), listEvents);
 
     res.status(StatusCodes.OK).json(result);
 };
 
 const create = (req, res) => {
+
+
     const startTime = parseInt(req.params.startTime);
     const endTime = startTime + 1000 * 60 * 30;
     const options = {
@@ -30,36 +32,30 @@ const create = (req, res) => {
         endTime: (new Date(endTime)).toISOString()
     };
 
-    fs.readFile(appDir + '/client_secret.json', (err, content) => {
-        if (err) {
-            logger.error('Get error when loading client secret file: ' + err);
-            return res.status(StatusCodes.BAD_REQUEST).json(err);
-        }
-        authorize(JSON.parse(content), addEvent, res, options);
-    });
+    const content = await read(appDir + '/utils/client_secret.json');
+
+    const result = await authorize(JSON.parse(content), addEvent, options);
+
+    res.status(StatusCodes.OK).json(result);
 };
 
 const show = (req, res) => {
-    fs.readFile(appDir + '/client_secret.json', (err, content) => {
-        if (err) {
-            logger.error('Get error when loading client secret file: ' + err);
-            return res.status(StatusCodes.BAD_REQUEST).json(err);
-        }
-        authorize(JSON.parse(content), getEvent, res, { eventId: req.params.eventId});
-    });
+    const content = await read(appDir + '/utils/client_secret.json');
+
+    const result = await authorize(JSON.parse(content), getEvent, { eventId: req.params.eventId});
+
+    res.status(StatusCodes.OK).json(result);
 };
 
 const update = (req, res) => {
 };
 
 const destroy = (req, res) => {
-    fs.readFile(appDir + '/client_secret.json', (err, content) => {
-        if (err) {
-            logger.error('Get error when loading client secret file: ' + err);
-            return res.status(StatusCodes.BAD_REQUEST).json(err);;
-        }
-        authorize(JSON.parse(content), removeEvent, res, { eventId: req.params.eventId});
-    });
+    const content = await read(appDir + '/utils/client_secret.json');
+
+    const result = await authorize(JSON.parse(content), removeEvent, res, { eventId: req.params.eventId});
+
+    res.status(StatusCodes.OK).json(result);
 };
 
 module.exports =  {
