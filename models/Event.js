@@ -26,6 +26,5 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
   );
-
   return Events;
 };

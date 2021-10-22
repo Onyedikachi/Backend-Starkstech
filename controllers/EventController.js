@@ -21,13 +21,12 @@ const index = async (req, res) => {
     res.status(StatusCodes.OK).json(result);
 };
 
-const create = (req, res) => {
-    const startTime = parseInt(req.params.startTime);
-    const endTime = startTime + 1000 * 60 * 30;
+const create = async (req, res) => {
+    const {startTime, endTime} = req.params
     const options = {
         summary: req.params.summary || "No title",
-        startTime: (new Date(startTime)).toISOString(),
-        endTime: (new Date(endTime)).toISOString()
+        startTime: (new Date(parseInt(startTime))).toISOString(),
+        endTime: (new Date(parseInt(endTime))).toISOString()
     };
 
     const content = await read(appDir + '/utils/client_secret.json');
@@ -37,7 +36,7 @@ const create = (req, res) => {
     res.status(StatusCodes.OK).json(result);
 };
 
-const show = (req, res) => {
+const show = async (req, res) => {
     const content = await read(appDir + '/utils/client_secret.json');
 
     const result = await authorize(JSON.parse(content), getEvent, { eventId: req.params.eventId});
@@ -48,7 +47,7 @@ const show = (req, res) => {
 const update = (req, res) => {
 };
 
-const destroy = (req, res) => {
+const destroy = async (req, res) => {
     const content = await read(appDir + '/utils/client_secret.json');
 
     const result = await authorize(JSON.parse(content), removeEvent, { eventId: req.params.eventId});

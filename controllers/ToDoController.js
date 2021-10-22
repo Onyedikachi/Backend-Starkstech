@@ -1,6 +1,8 @@
 const { StatusCodes } = require('http-status-codes');
-const { promisify } = require('util');
+
+const fs = require('fs');
 const path = require('path');
+const {promisify} = require('util');
 
 const appDir = path.dirname(require.main.filename);
 
@@ -9,7 +11,7 @@ const read = promisify(fs.readFile);
 
 const CustomError = require('../errors');
 const ToDos = require('../models/ToDoItem');
-const Events = require('../db/sequelize').Events
+// const Events = require('../db/sequelize').Events
 
 const createItem = async (req, res) => {
     const { attachments, name, description, accomplished, startTime, endTime } = req.body;
@@ -43,8 +45,6 @@ const createItem = async (req, res) => {
   });
 
   // create event in google calender
-  const startTime = parseInt(req.params.startTime);
-  const endTime = startTime + 1000 * 60 * 30;
   const options = {
       summary: name || "No title",
       description: description || "No description",
@@ -52,23 +52,23 @@ const createItem = async (req, res) => {
       endTime: (new Date(endTime)).toISOString()
   };
 
-  const content = await read(appDir + '/utils/client_secret.json');
+  const content = await fs.readFile(appDir + '/utils/client_secret.json');
 
-  const {eventId: id, summary, description, location, timeZone} 
+  const {eventId: id, summary, location, timeZone} 
     = await authorize(JSON.parse(content), addEvent, options);
   
   // track events in SQL db
-   const event = new Event({  
-          eventId,
-          summary,
-          description,
-          location,
-          timeZone,
-          new Date(startTime),
-          new Date(endTime),
-        });
+  //  const event = new Events({  
+  //         eventId,
+  //         summary,
+  //         description,
+  //         location,
+  //         timeZone,
+  //         startTime: new Date(startTime),
+  //         endTime: new Date(endTime),
+  //       });
     
-    await event.save() 
+  //   await event.save() 
 
   res
     .status(StatusCodes.CREATED)
