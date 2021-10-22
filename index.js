@@ -6,7 +6,6 @@ const express = require('express');
 const app = express();
 // rest of the packages
 const morgan = require('morgan');
-const fileUpload = require('express-fileupload');
 const rateLimiter = require('express-rate-limit');
 const helmet = require('helmet');
 const xss = require('xss-clean');
@@ -47,7 +46,6 @@ app.use(mongoSanitize());
 app.use(express.json());
 
 app.use(express.static('./public'));
-app.use(fileUpload());
 
 app.use('/api/v1/todos', toDoRoutes);
 app.use('/api/v1/events', eventRoutes);
@@ -55,6 +53,8 @@ app.use('/api/v1/events', eventRoutes);
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
+
+app.use(express.static('./public'));
 
 const port = process.env.PORT || 5000;
 const start = async () => {

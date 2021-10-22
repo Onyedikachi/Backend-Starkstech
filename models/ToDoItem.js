@@ -4,11 +4,7 @@ const AttachmentSchema = mongoose.Schema({
     name: { type: String, required: true },
     path: { type: String, reßquired: true },
     fileType: { type: String, required: true },
-    todo: {
-      type: mongoose.Schema.ObjectId,
-      ref: 'ToDos',
-      required: true,
-    },
+    originalName: {type: String, required: true},
   });
 
 const ToDoSchema = new mongoose.Schema(
@@ -28,6 +24,10 @@ const ToDoSchema = new mongoose.Schema(
     accomplished: {
       type: Boolean,
       default: false,
+    },
+    eventId: {
+      type: String,
+      require: [true, 'No event Id was assigned'],
     },
   },
   { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
