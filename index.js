@@ -14,18 +14,18 @@ const cors = require('cors');
 const mongoSanitize = require('express-mongo-sanitize');
 
 
-const winston = require('winston');
-const logger = winston.createLogger({
-  transports: [
-      new winston.transports.Console()
-  ]
-});
+
+const logger = require('./utils/logger');
 
 // database
 const noSqlDB = require('./db/mongoose');
 const sqlDB = require('./db/sequelize');
 
 //  routers
+
+const toDoRoutes = require('./routes/toDoRoutes');
+const eventRoutes = require('./routes/eventRoutes');
+
 
 // middleware
 const notFoundMiddleware = require('./middleware/not-found');
@@ -49,7 +49,8 @@ app.use(express.json());
 app.use(express.static('./public'));
 app.use(fileUpload());
 
-//app.use('/api/v1/auth', authRouter);
+app.use('/api/v1/todos', toDoRoutes);
+app.use('/api/v1/events', eventRoutes);
 
 
 app.use(notFoundMiddleware);
