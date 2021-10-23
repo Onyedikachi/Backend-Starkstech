@@ -2,7 +2,7 @@ module.exports = (sequelize, DataTypes) => {
   const Events = sequelize.define(
     "events",
     {
-      eventId: {  
+      todoId: {  
         type: DataTypes.INTEGER,
         primaryKey: true,
         allowNull: false

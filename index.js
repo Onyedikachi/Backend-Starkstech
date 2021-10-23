@@ -13,6 +13,7 @@ const cors = require('cors');
 const mongoSanitize = require('express-mongo-sanitize');
 
 
+const fileUpload = require('express-fileupload');
 
 const logger = require('./utils/logger');
 
@@ -43,7 +44,10 @@ app.use(cors());
 app.use(xss());
 app.use(mongoSanitize());
 
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(fileUpload({ useTempFiles: true }));
+
 
 app.use(express.static('./public'));
 
