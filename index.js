@@ -65,7 +65,7 @@ const start = async () => {
   try {
     await noSqlDB(process.env.MONGODB_URL);
 
-    await sqlDB.sequelize.sync({ force: false})
+    await sqlDB.sequelize.sync({ force: false })
 
     app.listen(port, () => {
       logger.info(`Server running on port ${port}`);

@@ -2,8 +2,8 @@ module.exports = (sequelize, DataTypes) => {
   const Events = sequelize.define(
     "events",
     {
-      todoId: {  
-        type: DataTypes.INTEGER,
+      eventId: {  
+        type: DataTypes.STRING,
         primaryKey: true,
         allowNull: false
       },

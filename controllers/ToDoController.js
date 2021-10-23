@@ -16,18 +16,19 @@ const ToDos = require('../models/ToDoItem');
 const Events = require('../db/sequelize').Events;
 
 
-
 const createItem = async (req, res) => {
     let { attachments } = req.files
-    console.log(attachments)
 
     if (isObject(attachments)) attachments = [ attachments ]
 
-
     const { name, description, accomplished, startTime, endTime } = req.body;
 
+    const oldTask = await ToDos.findOne({ name });
+
+  if (oldTask) {
+    throw new CustomError.BadRequestError(`A task with name : '${name}' already exists`);
+  }
   // create event in google calender
-  logger.info(req.body.startTime)
   const options = {
       summary: name || "No title",
       description: description || "No description",
@@ -74,7 +75,7 @@ const createItem = async (req, res) => {
 
     // track events in SQL db
    const event = new Events({  
-    todoId: toDo._id,
+    eventId: id,
     summary,
     description,
     location,
@@ -83,10 +84,17 @@ const createItem = async (req, res) => {
     endTime: new Date(parseInt(endTime)),
   });
 
+  
   await event.save() 
+  const data = { ... toDo._doc, location, timeZone, startTime, endTime }
+
+  if (data.hasOwnProperty('__v')){
+    delete  data.__v
+  }
+
   res
     .status(StatusCodes.CREATED)
-    .json({ ...toDo, location, timeZone, startTime, endTime });
+    .json(data);
 
 }
 
