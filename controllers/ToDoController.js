@@ -113,19 +113,20 @@ const getSingleTodoTask = async (req, res) => {
   }
   
   const { eventId } = toDo
+  logger.debug(toDo)
 
   const event = await Events.findOne({ 
     where: {
       eventId
     },
   });
-
+  
   const {
     location,
     timeZone,
     startTime,
     endTime
-  } = event
+  } = event || {location: "", timeZone: "", startTime: "", endTime: "" }
 
 
   res.status(StatusCodes.OK).json({ ... toDo._doc, location, timeZone, 
