@@ -9,9 +9,11 @@ const {
  getAllTasks
 } = require('../controllers/ToDoController');
 
+const Validator = require('../middleware/validator');
+
 router
   .route('/')
-  .post(createItem)
+  .post(Validator('createTask'),createItem)
   .get(getAllTasks)
 
 router.route('/:id').

@@ -49,15 +49,16 @@ const createItem = async (req, res) => {
     const file = attachments[i];
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
     const filename =  "attachments" + '-' + uniqueSuffix
+    const subDirectory = '/public/uploads/' + `${filename}`
     const filePath = path.join(
       __dirname,
-      '../public/uploads/' + `${filename}`
+      '..' + `${subDirectory}`
     );
     await file.mv(filePath);
 
     const Attachment = {
       name: filename,
-      path: filePath,
+      path: subDirectory,
       fileType: file.mimetype,
       originalName: file.name
     };
@@ -120,7 +121,7 @@ const getSingleTodoTask = async (req, res) => {
       eventId
     },
   });
-  
+
   const {
     location,
     timeZone,
@@ -134,6 +135,7 @@ const getSingleTodoTask = async (req, res) => {
 };
 
 const updateItem = async (req, res) => {
+  const { id: todoId } = req.params;
 
 }
 

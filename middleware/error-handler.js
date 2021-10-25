@@ -1,13 +1,14 @@
 const { StatusCodes } = require('http-status-codes');
+const logger = require('../utils/logger');
 const errorHandlerMiddleware = (err, req, res, next) => {
-  console.log(err);
+  logger.error(err);  
   let customError = {
     // set default
     statusCode: err.statusCode || StatusCodes.INTERNAL_SERVER_ERROR,
     msg: err.message || 'Something went wrong try again later',
   };
   if (err.name === 'ValidationError') {
-    customError.msg = Object.values(err.errors)
+    customError.msg = Object.values(err.errors || err.details)
       .map((item) => item.message)
       .join(',');
     customError.statusCode = 400;
