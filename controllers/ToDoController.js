@@ -69,7 +69,7 @@ const createItem = async (req, res) => {
      const toDo = await ToDos.create({
       name,
       description,
-      accomplished: (accomplished.trim().toLowerCase() == 'true'),
+      accomplished: (accomplished.trim().toLowerCase() === 'true'),
       attachments: taskAttachments,
       eventId: id
     });
@@ -114,7 +114,6 @@ const getSingleTodoTask = async (req, res) => {
   }
   
   const { eventId } = toDo
-  logger.debug(toDo)
 
   const event = await Events.findOne({ 
     where: {
@@ -127,15 +126,29 @@ const getSingleTodoTask = async (req, res) => {
     timeZone,
     startTime,
     endTime
-  } = event || {location: "", timeZone: "", startTime: "", endTime: "" }
-
+  } = event || {location: "", timeZone: "", startTime: "", endTime: "" };
 
   res.status(StatusCodes.OK).json({ ... toDo._doc, location, timeZone, 
   startTime, endTime });
 };
 
+const markTaskDone = async (req, res) => {
+  const { id : todoId } = req.params;
+
+  const toDo = await ToDos.findOneAndUpdate(
+    { _id: todoId },
+    { accomplished: true },
+    { new: true, runValidators: true }
+  );
+
+  res.status(StatusCodes.OK).json({ msg: "task marked complete" });
+
+}
+
 const updateItem = async (req, res) => {
   const { id: todoId } = req.params;
+
+ 
 
 }
 
@@ -178,5 +191,6 @@ module.exports = {
     updateItem,
     deleteItem,
     getSingleTodoTask,
-    getAllTasks
+    getAllTasks,
+    markTaskDone
 }
