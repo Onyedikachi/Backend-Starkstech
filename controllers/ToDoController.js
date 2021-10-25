@@ -23,7 +23,7 @@ const createItem = async (req, res) => {
 
     if (isObject(attachments)) attachments = [ attachments ]
 
-    const { name, description, accomplished, startTime, endTime } = req.body;
+    const { name, description, accomplished, startTime, endTime, attendees } = req.body;
 
     const oldTask = await ToDos.findOne({ name });
 
@@ -35,12 +35,19 @@ const createItem = async (req, res) => {
       summary: name || "No title",
       description: description || "No description",
       startTime: (new Date(parseInt(startTime))).toISOString(),
-      endTime: (new Date(parseInt(endTime))).toISOString()
+      endTime: (new Date(parseInt(endTime))).toISOString(),
+      attendees: attendees || []
   };
 
   const content = await read(appDir + '/utils/client_secret.json');
 
   const calEvent = await authorize(JSON.parse(content), addEvent, options);
+
+  logger.debug(calEvent.statusText);
+  logger.debug(Object.keys(calEvent.data))
+
+  logger.debug(Object.values(calEvent.data))
+
 
   const { id, summary, location, timeZone }  = calEvent.data
   
@@ -73,6 +80,7 @@ const createItem = async (req, res) => {
       description,
       accomplished: (accomplished.trim().toLowerCase() === 'true'),
       attachments: taskAttachments,
+      attendees: attendees || [],
       eventId: id
     });
 
@@ -169,8 +177,6 @@ const deleteAllTodoAttachmentsById = async (req, res) => {
   }
   
   const { attachments } = toDo;
-
-  logger.debug(attachments)
 
   for (let i = 0; i < attachments.length; i++) {
     const filePath = path.join(

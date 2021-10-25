@@ -29,6 +29,9 @@ const ToDoSchema = new mongoose.Schema(
       type: String,
       require: [true, 'No event Id was assigned'],
     },
+    attendees: [{
+      type: String
+    }]
   },
   { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );

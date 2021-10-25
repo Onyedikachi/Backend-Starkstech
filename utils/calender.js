@@ -112,11 +112,25 @@ const addEvent = (auth, options) => {
     const event = {
         summary: summary,
         start: {
-            dateTime: startTime
+            dateTime: startTime,
+            timeZone: "Africa/Lagos"
         },
         end: {
-            dateTime: endTime
-        }
+            dateTime: endTime,
+            timeZone: "Africa/Lagos"
+        },
+        recurrence: [
+          'RRULE:FREQ=DAILY;COUNT=2'
+        ],
+        attendees: options.attendees,
+        reminders: {
+          useDefault: false,
+          overrides: [
+            {method: 'email', minutes: 24 * 60},
+            {method: 'popup', minutes: 10},
+          ],
+        },
+        send: true
     };
     logger.info("add Event: ", event);
     return calendar.events.insert({
