@@ -43,12 +43,6 @@ const createItem = async (req, res) => {
 
   const calEvent = await authorize(JSON.parse(content), addEvent, options);
 
-  logger.debug(calEvent.statusText);
-  logger.debug(Object.keys(calEvent.data))
-
-  logger.debug(Object.values(calEvent.data))
-
-
   const { id, summary, location, timeZone }  = calEvent.data
   
   // upload attachments
