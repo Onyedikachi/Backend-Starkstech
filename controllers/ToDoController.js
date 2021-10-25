@@ -98,6 +98,12 @@ const createItem = async (req, res) => {
 
 }
 
+const getAllTasks = async (req, res) => {
+  const todos = await ToDos.find({});
+
+  res.status(StatusCodes.OK).json({ todos, count: todos.length });
+}
+
 const getSingleTodoTask = async (req, res) => {
   const { id: todoId } = req.params;
 
@@ -157,7 +163,7 @@ const deleteItem = async (req, res) => {
     await event.destroy({ 
       where: {
         eventId
-      }
+      },
     });
   }
   res.status(StatusCodes.OK).json({ msg: 'Success! Task removed.' });
@@ -168,5 +174,6 @@ module.exports = {
     createItem,
     updateItem,
     deleteItem,
-    getSingleTodoTask
+    getSingleTodoTask,
+    getAllTasks
 }
