@@ -130,13 +130,14 @@ const addEvent = (auth, options) => {
             {method: 'popup', minutes: 10},
           ],
         },
-        send: true
+        sendUpdates: true
     };
     logger.info("add Event: ", event);
     return calendar.events.insert({
         auth: auth,
         calendarId: 'primary',
-        resource: event
+        resource: event,
+        sendUpdates: true,
     });
 };
 
