@@ -6,7 +6,7 @@ const { promisify } = require('util');
 
 const appDir = path.dirname(require.main.filename);
 
-const { authorize, addEvent} = require('../utils/calender')
+const { authorize, addEvent, removeEvent} = require('../utils/calender')
 const { isObject } = require('../utils/helper');
 const logger = require('../utils/logger');
 const read = promisify(fs.readFile);
@@ -103,7 +103,36 @@ const updateItem = async (req, res) => {
 }
 
 const deleteItem = async (req, res) => {
+  const { id: todoId } = req.params;
 
+  const toDo = await ToDos.findOne({ _id: todoId });
+  if (!toDo) {
+    throw new CustomError.NotFoundError(`No task with id : ${todoId}`);
+  }
+  
+  const { eventId } = toDo
+  // delete from google calender
+  const content = await read(appDir + '/utils/client_secret.json');
+  await authorize(JSON.parse(content), removeEvent, { eventId });
+
+  // delete from NoSQl DB
+  await toDo.remove();
+
+  // delete from events SQL DB
+  const event = await Events.findOne({ 
+    where: {
+      eventId
+    },
+  });
+
+  if(event) {
+    await event.destroy({ 
+      where: {
+        eventId
+      }
+    });
+  }
+  res.status(StatusCodes.OK).json({ msg: 'Success! Task removed.' });
 }
 
 

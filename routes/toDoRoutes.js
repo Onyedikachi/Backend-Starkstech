@@ -3,11 +3,13 @@ const router = express.Router();
 
 
 const {
- createItem
+ createItem,
+ deleteItem
 } = require('../controllers/ToDoController');
 
 router
   .route('/')
   .post(createItem)
 
+router.route('/:id').delete(deleteItem)
 module.exports = router;
