@@ -129,15 +129,15 @@ const addEvent = (auth, options) => {
             {method: 'email', minutes: 24 * 60},
             {method: 'popup', minutes: 10},
           ],
-        },
-        sendUpdates: true
+        }
     };
     logger.info("add Event: ", event);
     return calendar.events.insert({
         auth: auth,
         calendarId: 'primary',
         resource: event,
-        sendUpdates: true,
+        sendUpdates: 'all',
+        supportsAttachments: true,
     });
 };
 
