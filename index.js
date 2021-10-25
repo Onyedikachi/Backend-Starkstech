@@ -72,7 +72,7 @@ const start = async () => {
       });
    
   } catch (error) {
-    console.log(error);
+    logger.error(error);
   }
 };
 
