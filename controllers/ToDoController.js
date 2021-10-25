@@ -122,7 +122,7 @@ const deleteItem = async (req, res) => {
   const event = await Events.findOne({ 
     where: {
       eventId
-    },
+    }
   });
 
   if(event) {
