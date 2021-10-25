@@ -4,12 +4,15 @@ const router = express.Router();
 
 const {
  createItem,
- deleteItem
+ deleteItem,
+ getSingleTodoTask
 } = require('../controllers/ToDoController');
 
 router
   .route('/')
   .post(createItem)
 
-router.route('/:id').delete(deleteItem)
+router.route('/:id').
+  delete(deleteItem)
+  .get(getSingleTodoTask)
 module.exports = router;

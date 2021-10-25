@@ -98,6 +98,34 @@ const createItem = async (req, res) => {
 
 }
 
+const getSingleTodoTask = async (req, res) => {
+  const { id: todoId } = req.params;
+
+  const toDo = await ToDos.findOne({ _id: todoId });
+  if (!toDo) {
+    throw new CustomError.NotFoundError(`No task with id : ${todoId}`);
+  }
+  
+  const { eventId } = toDo
+
+  const event = await Events.findOne({ 
+    where: {
+      eventId
+    },
+  });
+
+  const {
+    location,
+    timeZone,
+    startTime,
+    endTime
+  } = event
+
+
+  res.status(StatusCodes.OK).json({ ... toDo._doc, location, timeZone, 
+  startTime, endTime });
+};
+
 const updateItem = async (req, res) => {
 
 }
@@ -139,5 +167,6 @@ const deleteItem = async (req, res) => {
 module.exports = {
     createItem,
     updateItem,
-    deleteItem
+    deleteItem,
+    getSingleTodoTask
 }
