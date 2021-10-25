@@ -9,7 +9,9 @@ const appDir = path.dirname(require.main.filename);
 const { authorize, addEvent, removeEvent} = require('../utils/calender')
 const { isObject } = require('../utils/helper');
 const logger = require('../utils/logger');
+
 const read = promisify(fs.readFile);
+const removeFile = promisify(fs.unlink);
 
 const CustomError = require('../errors');
 const ToDos = require('../models/ToDoItem');
@@ -52,7 +54,7 @@ const createItem = async (req, res) => {
     const subDirectory = '/public/uploads/' + `${filename}`
     const filePath = path.join(
       __dirname,
-      '..' + `${subDirectory}`
+      '../' + `${subDirectory}`
     );
     await file.mv(filePath);
 
@@ -135,7 +137,7 @@ const getSingleTodoTask = async (req, res) => {
 const markTaskDone = async (req, res) => {
   const { id : todoId } = req.params;
 
-  const toDo = await ToDos.findOneAndUpdate(
+  await ToDos.findOneAndUpdate(
     { _id: todoId },
     { accomplished: true },
     { new: true, runValidators: true }
@@ -148,7 +150,7 @@ const markTaskDone = async (req, res) => {
 const markTaskUnDone = async (req, res) => {
   const { id : todoId } = req.params;
 
-  const toDo = await ToDos.findOneAndUpdate(
+  await ToDos.findOneAndUpdate(
     { _id: todoId },
     { accomplished: false },
     { new: true, runValidators: true }
@@ -156,6 +158,35 @@ const markTaskUnDone = async (req, res) => {
 
   res.status(StatusCodes.OK).json({ msg: "task marked incomplete" });
 
+}
+
+const deleteAllTodoAttachmentsById = async (req, res) => {
+  const { id: todoId } = req.params;
+
+  const toDo = await ToDos.findOne({ _id: todoId });
+  if (!toDo) {
+    throw new CustomError.NotFoundError(`No task with id : ${todoId}`);
+  }
+  
+  const { attachments } = toDo;
+
+  logger.debug(attachments)
+
+  for (let i = 0; i < attachments.length; i++) {
+    const filePath = path.join(
+      __dirname,
+      '../' + `${attachments[i].path}`
+    );
+    await removeFile(filePath);
+  }
+  
+  await ToDos.findOneAndUpdate(
+    { _id: todoId },
+    { attachments: [] },
+    { new: true, runValidators: true }
+  );
+  res.status(StatusCodes.OK)
+    .json({ msg: `deleted all task attachements for ${todoId}` });
 }
 
 const updateItem = async (req, res) => {
@@ -206,5 +237,6 @@ module.exports = {
     getSingleTodoTask,
     getAllTasks,
     markTaskDone,
-    markTaskUnDone
+    markTaskUnDone,
+    deleteAllTodoAttachmentsById
 }
