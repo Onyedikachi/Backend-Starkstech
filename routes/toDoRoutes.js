@@ -7,7 +7,8 @@ const {
  deleteItem,
  getSingleTodoTask,
  getAllTasks,
- markTaskDone
+ markTaskDone,
+ markTaskUnDone
 } = require('../controllers/ToDoController');
 
 const Validator = require('../middleware/validator');
@@ -18,7 +19,11 @@ router
   .get(getAllTasks)
 
 
-router.route('/:id/done').post(markTaskDone)
+router
+  .route('/:id/done').post(markTaskDone)
+
+router
+  .route('/:id/undone').post(markTaskUnDone)
 
 router.route('/:id').
   delete(deleteItem)

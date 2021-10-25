@@ -145,6 +145,19 @@ const markTaskDone = async (req, res) => {
 
 }
 
+const markTaskUnDone = async (req, res) => {
+  const { id : todoId } = req.params;
+
+  const toDo = await ToDos.findOneAndUpdate(
+    { _id: todoId },
+    { accomplished: false },
+    { new: true, runValidators: true }
+  );
+
+  res.status(StatusCodes.OK).json({ msg: "task marked incomplete" });
+
+}
+
 const updateItem = async (req, res) => {
   const { id: todoId } = req.params;
 
@@ -192,5 +205,6 @@ module.exports = {
     deleteItem,
     getSingleTodoTask,
     getAllTasks,
-    markTaskDone
+    markTaskDone,
+    markTaskUnDone
 }
